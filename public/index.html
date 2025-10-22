@@ -2,46 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LoveNest 💕</title>
+  <title>I LOVE YOU PRINCESS MWAH 💕</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to LoveNest 💖</h1>
+    <h1>I LOVE YOU PRINCESS MWAH 💕</h1>
 
     <!-- Login Form -->
     <form action="/login" method="POST">
       <input type="text" name="username" placeholder="Your name" required>
       <input type="password" name="password" placeholder="Secret password" required>
-      <button type="submit">Enter LoveNest</button>
+      <button type="submit">Enter</button>
     </form>
 
-    <!-- Message Board (hidden until logged in) -->
+    <!-- Message Board -->
     <div class="message-board" id="messageBoard" style="display: none;">
       <h2>💌 Messages</h2>
-
-      <!-- Message Form -->
       <form action="/message" method="POST">
         <textarea name="message" placeholder="Write something sweet..." required></textarea>
         <button type="submit">Send</button>
       </form>
-
-      <!-- Messages will appear here -->
       <div id="messages"></div>
-
-      <!-- Logout -->
       <a href="/logout">Log out</a>
+    </div>
+
+    <!-- Daily Poem -->
+    <div class="poems" id="poemBox">
+      <h2>🌙 Today’s Poem for my babygirl<33</h2>
+      <p id="poemText"></p>
     </div>
   </div>
 
-  <!-- JavaScript to load messages -->
+  <!-- Floating Hearts & Flowers -->
+  <div id="floaters"></div>
+
   <script>
+    // Escape HTML
     function escapeHTML(str) {
       return str.replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;");
     }
 
+    // Load messages
     fetch('/messages')
       .then(res => {
         if (!res.ok) throw new Error('Not logged in');
@@ -57,6 +61,27 @@
       .catch(err => {
         console.log('Message board hidden until login');
       });
+
+    // Load daily poem
+    fetch('/poem')
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById('poemText').innerHTML = text.replace(/\n/g, '<br>');
+      });
+
+    // Floating hearts & flowers
+    const floaters = document.getElementById('floaters');
+    const symbols = ['💖', '🌸', '💘', '🌷', '💞', '🌺'];
+
+    setInterval(() => {
+      const el = document.createElement('div');
+      el.className = 'floater';
+      el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (6 + Math.random() * 4) + 's';
+      floaters.appendChild(el);
+      setTimeout(() => el.remove(), 10000);
+    }, 500);
   </script>
 </body>
 </html>
