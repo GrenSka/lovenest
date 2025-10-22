@@ -74,19 +74,21 @@ button {
 /* Floating login button */
 .floating-heart {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: #ff69b4;
   color: white;
   font-size: 2rem;
   border: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   z-index: 1000;
 }
+
 
 /* Modal styles */
 .modal {

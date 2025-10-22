@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>I LOVE YOU BABY MWAH💕</title>
+  <title>I LOVE YOU BABY MWAH 💕</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="container">
-    <h1>I LOVE YOU BABY MWAH💕</h1>
+    <h1>I LOVE YOU BABY MWAH 💕</h1>
 
     <!-- Message Board -->
     <div class="message-board" id="messageBoard" style="display: none;">
@@ -21,9 +21,9 @@
     </div>
 
     <!-- Daily Poem Section -->
-    <div class="poems" id="poemBox">
-      <h2>🌙 Today’s Poem for Sana<33</h2>
-      <p id="poemText">Loading your poem...</p>
+    <div class="poems" id="poemBox" style="display: none;">
+      <h2>🌙 Today’s Poem for my babygirl mwah</h2>
+      <p id="poemText"></p>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
                 .replace(/>/g, "&gt;");
     }
 
-    // Load messages
+    // Load messages and poem after login
     fetch('/messages')
       .then(res => {
         if (!res.ok) throw new Error('Not logged in');
@@ -65,16 +65,17 @@
         container.innerHTML = data.map(m => `
           <p><strong>${escapeHTML(m.user)}</strong> at ${new Date(m.time).toLocaleString()}: ${escapeHTML(m.text)}</p>
         `).join('');
+
+        // Load poem
+        fetch('/poem')
+          .then(res => res.text())
+          .then(text => {
+            document.getElementById('poemBox').style.display = 'block';
+            document.getElementById('poemText').innerHTML = text.replace(/\n/g, '<br>');
+          });
       })
       .catch(err => {
-        console.log('Message board hidden until login');
-      });
-
-    // Load poem
-    fetch('/poem')
-      .then(res => res.text())
-      .then(text => {
-        document.getElementById('poemText').innerHTML = text.replace(/\n/g, '<br>');
+        console.log('Login required to view messages and poem');
       });
 
     // Floating animation

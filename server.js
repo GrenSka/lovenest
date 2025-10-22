@@ -1,47 +1,54 @@
-const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
+const PORT = 3000;
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'loveSecret', resave: false, saveUninitialized: true }));
-
-// Load messages from file
+// Load messages
 let messages = [];
 if (fs.existsSync('messages.json')) {
-  messages = JSON.parse(fs.readFileSync('messages.json'));
+  messages = JSON.parse(fs.readFileSync('messages.json', 'utf8'));
 }
 
-// Users
-let users = {
-  'Sana<33': bcrypt.hashSync('MyPrettyGirl<3', 10),
-  'oorjiboorji': bcrypt.hashSync('praedos@1', 10)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(session({
+  secret: 'lovenest-secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Only two users
+const users = {
+  'Sana<33': 'MyPrettyGirl<3',
+  'admin': 'praedos@1'
 };
 
-// Login route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  if (users[username] && bcrypt.compareSync(password, users[username])) {
+  if (users[username] && users[username] === password) {
     req.session.user = username;
     res.redirect('/');
   } else {
-    res.send('Invalid login 💔');
+    res.send('Login failed 💔');
   }
 });
 
-// Message route
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
+
 app.post('/message', (req, res) => {
-  if (req.session.user) {
+  if (req.session.user === 'Sana<33') {
     const newMessage = {
-      user: req.session.user,
+      user: 'Sana<33',
       text: req.body.message,
       time: new Date().toISOString()
     };
@@ -49,36 +56,30 @@ app.post('/message', (req, res) => {
     fs.writeFileSync('messages.json', JSON.stringify(messages));
     res.redirect('/');
   } else {
-    res.send('Please log in first 💔');
+    res.send('Only Sana<33 can send messages 💌');
   }
 });
 
-// Messages API
 app.get('/messages', (req, res) => {
-  if (req.session.user) {
-    if (req.session.user === 'admin') {
-      res.json(messages); // Admin sees everything
-    } else {
-      const visibleMessages = messages.filter(m => m.user !== req.session.user);
-      res.json(visibleMessages); // Sana<33 sees only others' messages
-    }
+  if (req.session.user === 'Sana<33') {
+    const visibleMessages = messages.filter(m => m.user !== 'Sana<33');
+    res.json(visibleMessages);
+  } else if (req.session.user === 'admin') {
+    res.json(messages);
   } else {
-    res.status(401).send('Unauthorized');
+    res.status(403).send('Please log in 💔');
   }
 });
 
-// Logout route
-app.get('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/');
-  });
+app.get('/poem', (req, res) => {
+  if (req.session.user) {
+    const poem = fs.readFileSync('poem.txt', 'utf8');
+    res.send(poem);
+  } else {
+    res.status(403).send('Please log in 💔');
+  }
 });
 
-// Homepage
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.listen(PORT, () => {
+  console.log(`LoveNest running at http://localhost:${PORT}`);
 });
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`LoveNest running on http://localhost:${PORT} 💖`));
