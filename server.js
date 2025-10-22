@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const app = express();
 
@@ -13,9 +14,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: 'loveSecret', resave: false, saveUninitialized: true }));
 
-// Dummy user and message store
-let users = { girlfriend: bcrypt.hashSync('mypassword', 10) };
+// Load messages from file
 let messages = [];
+if (fs.existsSync('messages.json')) {
+  messages = JSON.parse(fs.readFileSync('messages.json'));
+}
+
+// Users
+let users = {
+  'Sana<33': bcrypt.hashSync('MyPrettyGirl<3', 10),
+  'oorjiboorji': bcrypt.hashSync('praedos@1', 10)
+};
 
 // Login route
 app.post('/login', (req, res) => {
@@ -31,7 +40,13 @@ app.post('/login', (req, res) => {
 // Message route
 app.post('/message', (req, res) => {
   if (req.session.user) {
-    messages.push({ user: req.session.user, text: req.body.message });
+    const newMessage = {
+      user: req.session.user,
+      text: req.body.message,
+      time: new Date().toISOString()
+    };
+    messages.push(newMessage);
+    fs.writeFileSync('messages.json', JSON.stringify(messages));
     res.redirect('/');
   } else {
     res.send('Please log in first 💔');
@@ -41,7 +56,12 @@ app.post('/message', (req, res) => {
 // Messages API
 app.get('/messages', (req, res) => {
   if (req.session.user) {
-    res.json(messages);
+    if (req.session.user === 'admin') {
+      res.json(messages); // Admin sees everything
+    } else {
+      const visibleMessages = messages.filter(m => m.user !== req.session.user);
+      res.json(visibleMessages); // Sana<33 sees only others' messages
+    }
   } else {
     res.status(401).send('Unauthorized');
   }

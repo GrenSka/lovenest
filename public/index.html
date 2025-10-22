@@ -36,19 +36,22 @@
 
   <!-- JavaScript to load messages -->
   <script>
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+    }
+
     fetch('/messages')
       .then(res => {
         if (!res.ok) throw new Error('Not logged in');
         return res.json();
       })
       .then(data => {
-        // Show message board
         document.getElementById('messageBoard').style.display = 'block';
-
-        // Render messages
         const container = document.getElementById('messages');
         container.innerHTML = data.map(m => `
-          <p><strong>${m.user}:</strong> ${m.text}</p>
+          <p><strong>${escapeHTML(m.user)}</strong> at ${new Date(m.time).toLocaleString()}: ${escapeHTML(m.text)}</p>
         `).join('');
       })
       .catch(err => {
