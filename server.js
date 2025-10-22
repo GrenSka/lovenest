@@ -1,16 +1,23 @@
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+
 const app = express();
 
+// Serve static files from "public"
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({ secret: 'loveSecret', resave: false, saveUninitialized: true }));
+
+// Dummy user and message store
 let users = { girlfriend: bcrypt.hashSync('mypassword', 10) };
 let messages = [];
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname));
-app.use(session({ secret: 'loveSecret', resave: false, saveUninitialized: true }));
-
+// Login route
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (users[username] && bcrypt.compareSync(password, users[username])) {
@@ -21,6 +28,7 @@ app.post('/login', (req, res) => {
   }
 });
 
+// Message route
 app.post('/message', (req, res) => {
   if (req.session.user) {
     messages.push({ user: req.session.user, text: req.body.message });
@@ -30,16 +38,21 @@ app.post('/message', (req, res) => {
   }
 });
 
+// Homepage route
 app.get('/', (req, res) => {
   if (req.session.user) {
     res.send(`
       <h1>Welcome back, ${req.session.user} 💕</h1>
-      <ul>${messages.map(m => `<li><strong>${m.user}:</strong> ${m.text}</li>`).join('')}</ul>
-      <a href="/">Go back</a>
+      <ul>${messages.map(m => `<li><strong>${m.user}:</strong>: ${m.text}</li>`).join('')}</ul>
+      <form action="/message" method="POST">
+        <textarea name="message" placeholder="Write something sweet..." required></textarea>
+        <button type="submit">Send</button>
+      </form>
+      <a href="/logout">Go back</a>
     `);
   } else {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
 });
-
-app.listen(3000, () => console.log('LoveNest running on http://localhost:3000 💖'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`LoveNest running on http://localhost:${PORT} 💖`));
