@@ -1,0 +1,34 @@
+body {
+  background: #ffe4e1;
+  font-family: 'Segoe UI', sans-serif;
+  color: #d81b60;
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 30px;
+  background: #fff0f5;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #f8bbd0;
+}
+
+input, textarea, button {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #f48fb1;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+button {
+  background: #f06292;
+  color: white;
+  cursor: pointer;
+}
+
+.message-board {
+  margin-top: 30px;
+}

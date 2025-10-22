@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LoveNest 💕</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to LoveNest 💖</h1>
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Your name" required>
+      <input type="password" name="password" placeholder="Secret password" required>
+      <button type="submit">Enter LoveNest</button>
+    </form>
+
+    <div class="message-board">
+      <h2>💌 Messages</h2>
+      <form action="/message" method="POST">
+        <textarea name="message" placeholder="Write something sweet..." required></textarea>
+        <button type="submit">Send</button>
+      </form>
+      <div id="messages"></div>
+    </div>
+  </div>
+</body>
+</html>
