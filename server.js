@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// Serve static files from "public"
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
@@ -38,21 +38,27 @@ app.post('/message', (req, res) => {
   }
 });
 
-// Homepage route
-app.get('/', (req, res) => {
+// Messages API
+app.get('/messages', (req, res) => {
   if (req.session.user) {
-    res.send(`
-      <h1>Welcome back, ${req.session.user} 💕</h1>
-      <ul>${messages.map(m => `<li><strong>${m.user}:</strong>: ${m.text}</li>`).join('')}</ul>
-      <form action="/message" method="POST">
-        <textarea name="message" placeholder="Write something sweet..." required></textarea>
-        <button type="submit">Send</button>
-      </form>
-      <a href="/logout">Go back</a>
-    `);
+    res.json(messages);
   } else {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.status(401).send('Unauthorized');
   }
 });
+
+// Logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/');
+  });
+});
+
+// Homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`LoveNest running on http://localhost:${PORT} 💖`));

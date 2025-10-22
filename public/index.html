@@ -8,20 +8,52 @@
 <body>
   <div class="container">
     <h1>Welcome to LoveNest 💖</h1>
+
+    <!-- Login Form -->
     <form action="/login" method="POST">
       <input type="text" name="username" placeholder="Your name" required>
       <input type="password" name="password" placeholder="Secret password" required>
       <button type="submit">Enter LoveNest</button>
     </form>
 
-    <div class="message-board">
+    <!-- Message Board (hidden until logged in) -->
+    <div class="message-board" id="messageBoard" style="display: none;">
       <h2>💌 Messages</h2>
+
+      <!-- Message Form -->
       <form action="/message" method="POST">
         <textarea name="message" placeholder="Write something sweet..." required></textarea>
         <button type="submit">Send</button>
       </form>
+
+      <!-- Messages will appear here -->
       <div id="messages"></div>
+
+      <!-- Logout -->
+      <a href="/logout">Log out</a>
     </div>
   </div>
+
+  <!-- JavaScript to load messages -->
+  <script>
+    fetch('/messages')
+      .then(res => {
+        if (!res.ok) throw new Error('Not logged in');
+        return res.json();
+      })
+      .then(data => {
+        // Show message board
+        document.getElementById('messageBoard').style.display = 'block';
+
+        // Render messages
+        const container = document.getElementById('messages');
+        container.innerHTML = data.map(m => `
+          <p><strong>${m.user}:</strong> ${m.text}</p>
+        `).join('');
+      })
+      .catch(err => {
+        console.log('Message board hidden until login');
+      });
+  </script>
 </body>
 </html>
