@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>I LOVE YOU BABY MWAH 💕</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>I LOVE YOU BABY MWAHH 💕</h1>
+
+    <!-- Message Board -->
+    <div class="message-board" id="messageBoard" style="display: none;">
+      <h2>💌 Messages</h2>
+      <form action="/message" method="POST">
+        <textarea name="message" placeholder="Write something sweet..." required></textarea>
+        <button type="submit">Send</button>
+      </form>
+      <div id="messages"></div>
+      <a href="/logout">Log out</a>
+    </div>
+
+    <!-- Daily Poem Section -->
+    <div class="poems" id="poemBox" style="display: none;">
+      <h2>🌙 Today’s Poem for Nana</h2>
+      <p id="poemText"></p>
+    </div>
+  </div>
+
+  <!-- Floating Login Button -->
+  <button id="loginTrigger" class="floating-heart">💖</button>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <h2>Come here pretty mama 💘</h2>
+      <form action="/login" method="POST">
+        <input type="text" name="username" placeholder="Your name" required>
+        <input type="password" name="password" placeholder="Secret password" required>
+        <button type="submit">Enter</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Hearts & Flowers -->
+  <div id="floaters"></div>
+
+  <script>
+  // Escape HTML
+  function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+  }
+
+  // Load messages and poem after login
+  fetch('/messages')
+    .then(res => {
+      if (!res.ok) throw new Error('Not logged in');
+      return res.json();
+    })
+    .then(data => {
+      document.getElementById('messageBoard').style.display = 'block';
+      const container = document.getElementById('messages');
+      container.innerHTML = data.map(m => `
+        <p><strong>${escapeHTML(m.user)}</strong> at ${new Date(m.time).toLocaleString()}: ${escapeHTML(m.text)}</p>
+      `).join('');
+
+      // Load poem only after login
+      fetch('/poem')
+        .then(res => {
+          if (!res.ok) throw new Error('Poem fetch failed');
+          return res.text();
+        })
+        .then(poem => {
+          document.getElementById('poemBox').style.display = 'block';
+          document.getElementById('poemText').textContent = poem;
+        })
+        .catch(err => console.error('Poem error:', err));
+    })
+    .catch(err => console.error('Message fetch error:', err));
+
+  // Show login modal when heart button is clicked
+  document.getElementById('loginTrigger').addEventListener('click', () => {
+    document.getElementById('loginModal').style.display = 'block';
+  });
+
+  // Optional: Hide modal when clicking outside
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('loginModal');
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+</script>
+

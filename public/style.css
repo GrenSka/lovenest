@@ -1,0 +1,111 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-image: url('/nana-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #fff;
+  padding: 2rem;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  color: #333;
+}
+
+h1, h2 {
+  text-align: center;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+input, textarea, button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+button {
+  background: #32002e;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.message-board {
+  margin-top: 2rem;
+}
+
+.poems {
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  font-style: italic;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Floating hearts & flowers */
+@keyframes float {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
+.floater {
+  position: fixed;
+  bottom: -50px;
+  animation: float 8s linear infinite;
+  pointer-events: none;
+  font-size: 2rem;
+  z-index: 999;
+}
+
+/* Floating login button at bottom center */
+.floating-heart {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #710069;
+  color: white;
+  font-size: 2rem;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  max-width: 400px;
+  margin: 10% auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  color: #333;
+}
