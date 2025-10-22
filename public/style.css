@@ -71,12 +71,12 @@ button {
   z-index: 999;
 }
 
-/* Floating login button */
+/* Floating login button at bottom center */
 .floating-heart {
   position: fixed;
-  top: 50%;
+  bottom: 2rem;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background: #ff69b4;
   color: white;
   font-size: 2rem;
@@ -88,7 +88,6 @@ button {
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   z-index: 1000;
 }
-
 
 /* Modal styles */
 .modal {

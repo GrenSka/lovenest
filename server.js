@@ -23,13 +23,15 @@ app.use(session({
 // Only two users
 const users = {
   'Sana<33': 'MyPrettyGirl<3',
-  'admin': 'praedos@1'
+  'admin': 'lovemaster'
 };
 
+// Serve homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Login route
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (users[username] && users[username] === password) {
@@ -40,11 +42,13 @@ app.post('/login', (req, res) => {
   }
 });
 
+// Logout route
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
 
+// Message submission
 app.post('/message', (req, res) => {
   if (req.session.user === 'Sana<33') {
     const newMessage = {
@@ -60,6 +64,7 @@ app.post('/message', (req, res) => {
   }
 });
 
+// Message viewing
 app.get('/messages', (req, res) => {
   if (req.session.user === 'Sana<33') {
     const visibleMessages = messages.filter(m => m.user !== 'Sana<33');
@@ -71,6 +76,7 @@ app.get('/messages', (req, res) => {
   }
 });
 
+// Poem access
 app.get('/poem', (req, res) => {
   if (req.session.user) {
     const poem = fs.readFileSync('poem.txt', 'utf8');
@@ -80,6 +86,7 @@ app.get('/poem', (req, res) => {
   }
 });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`LoveNest running at http://localhost:${PORT}`);
 });

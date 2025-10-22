@@ -7,7 +7,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>I LOVE YOU BABY MWAH 💕</h1>
+    <h1>I LOVE YOU BABY MWAHH 💕</h1>
 
     <!-- Message Board -->
     <div class="message-board" id="messageBoard" style="display: none;">
@@ -22,7 +22,7 @@
 
     <!-- Daily Poem Section -->
     <div class="poems" id="poemBox" style="display: none;">
-      <h2>🌙 Today’s Poem for my babygirl mwah</h2>
+      <h2>🌙 Today’s Poem for Sana</h2>
       <p id="poemText"></p>
     </div>
   </div>
@@ -66,7 +66,7 @@
           <p><strong>${escapeHTML(m.user)}</strong> at ${new Date(m.time).toLocaleString()}: ${escapeHTML(m.text)}</p>
         `).join('');
 
-        // Load poem
+        // Load poem only after login
         fetch('/poem')
           .then(res => res.text())
           .then(text => {
