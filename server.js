@@ -34,6 +34,7 @@ app.get('/', (req, res) => {
 // Login route
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
+  console.log('Login attempt:', username, password); // Debug
   if (users[username] && users[username] === password) {
     req.session.user = username;
     res.redirect('/');
@@ -86,7 +87,6 @@ app.get('/poem', (req, res) => {
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`LoveNest running at http://localhost:${PORT}`);
 });
