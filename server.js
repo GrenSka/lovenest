@@ -90,3 +90,7 @@ app.get('/poem', (req, res) => {
 app.listen(PORT, () => {
   console.log(`LoveNest running at http://localhost:${PORT}`);
 });
+
+app.get('/login', (req, res) => {
+  res.redirect('/');
+});
